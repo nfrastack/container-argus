@@ -1,3 +1,8 @@
+## 1.5.99 2025-09-12 <dave at tiredofit dot ca>
+
+Add image deprecation and EOL notice
+
+
 ## 1.5.33 2025-05-29 <dave at tiredofit dot ca>
 
    ### Added

@@ -6,6 +6,32 @@ prepare_service
 set +a
 PROCESS_NAME="argus"
 
+cat <<EOF
+
+*********************************************************************************
+*                                                                               *
+*                    END OF LIFE NOTICE AUGUST 14, 2025                         *
+*                               tiredofit/argus                                 *
+*                                                                               *
+* This image is no longer maintained as of and will not receive updates.        *
+*                                                                               *
+* A successor image is available at:                                            *
+*                                                                               *
+* Repository | Documentation:                                                   *
+*   - https://github.com/nfrastack/container-argus                              *
+*                                                                               *
+* Image Registries:                                                             *
+*   - https://hub.docker.com/r/nfrastack/argus                                  *
+*   - https://github.com/nfrastack/container-base/pkgs/container/container-base *
+*                                                                               *
+* Please visit https://nfrastack.com for more information.                      *
+*                                                                               *
+*********************************************************************************
+
+EOF
+
+sleep 15
+
 bootstrap_filesystem
 configure_argus
 custom_files "${CONTAINER_CUSTOM_PATH}" /
