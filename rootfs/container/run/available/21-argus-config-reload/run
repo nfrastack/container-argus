@@ -1,8 +1,11 @@
 #!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
-source /assets/functions/00-container
-prepare_service defaults 20-argus
-PROCESS_NAME="argus-config-reload"
+source /container/base/functions/container/init
+prepare_service 20-argus
+SERVICE_NAME="argus-config-reload"
 
 check_container_initialized
 check_service_initialized 20-argus

@@ -1,0 +1,16 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+set -a
+prepare_service
+set +a
+SERVICE_NAME="argus"
+
+argus_bootstrap_filesystem
+argus_configure_application
+custom_files "${CONTAINER_CUSTOM_PATH}" /
+custom_scripts "${CONTAINER_CUSTOM_SCRIPTS_PATH}"
+liftoff

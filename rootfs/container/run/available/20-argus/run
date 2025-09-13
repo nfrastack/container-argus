@@ -1,9 +1,12 @@
 #!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
-source /assets/functions/00-container
-PROCESS_NAME="argus"
+source /container/base/functions/container/init
+SERVICE_NAME="argus"
 set -a
-prepare_service defaults single
+prepare_service 20-argus
 set +a
 
 check_container_initialized
@@ -22,11 +25,11 @@ case "${LOG_TYPE,,}" in
     ;;
     file )
         out="${LOG_PATH}"/"${LOG_FILE}"
-        pipe=" sleep 0.1"
+        pipe=" :"
     ;;
 esac
 
-tranform_file_var ARGUS ARGS
+tranform_var file ARGUS_ARGS
 print_start "Starting Argus ${ARGUS_VERSION}"
 s6-setuidgid argus \
                     exec argus \

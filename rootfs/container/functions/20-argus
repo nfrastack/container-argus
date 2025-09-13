@@ -1,37 +1,31 @@
-#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
-bootstrap_filesystem() {
-    if [ ! -d "${CONFIG_PATH}" ] ; then
-        mkdir -p "${CONFIG_PATH}"
-    fi
-    if [ "$(stat -c %U "${CONFIG_PATH}")" != "argus" ] ; then chown argus:argus "${CONFIG_PATH}" ; fi
-    if [ ! -f "${CONFIG_PATH}"/"${CONFIG_FILE}" ] ; then
-        touch "${CONFIG_PATH}"/"${CONFIG_FILE}"
-    fi
-    if [ "$(stat -c %U "${CONFIG_PATH}"/"${CONFIG_FILE}")" != "argus" ] ; then chown argus:argus "${CONFIG_PATH}"/"${CONFIG_FILE}" ; fi
-
-    if [ ! -d "${DATA_PATH}" ] ; then
-        mkdir -p "${DATA_PATH}"
-    fi
-    if [ "$(stat -c %U "${DATA_PATH}")" != "argus" ] ; then chown argus:argus "${DATA_PATH}" ; fi
+argus_bootstrap_filesystem() {
+    create_folder \
+                "${CONFIG_PATH},\
+                ${DATA_PATH}" \
+                argus:argus 755
 
     if [ "${LOG_TYPE,,}" = "both" ] || [ "${LOG_TYPE,,}" = "file" ] ; then
         if [ ! -d "${LOG_PATH}" ] ; then
-            mkdir -p "${LOG_PATH}"
+            create_folder \
+                            "${LOG_PATH}" \
+                            argus:argus 755
         fi
-        if [ "$(stat -c %U "${LOG_PATH}")" != "argus" ] ; then chown argus:argus "${LOG_PATH}" ; fi
         create_logrotate argus "${LOG_PATH}"/"${LOG_FILE}" argus argus argus
     fi
 }
 
-configure_argus() {
-    transform_file_var \
+argus_configure_application() {
+    transform_var file \
                             ADMIN_PASS \
                             ADMIN_USER \
                             DEFAULT_SERVICE_LATEST_VERSION_ACCESS_TOKEN
     update_template /etc/nginx/sites.available/argus.conf LISTEN_PORT
     if var_false "${RESTART_ON_CONFIG_CHANGE}" ; then
-        rm -rf /etc/services.available/21-argus-config-reload
+        rm -rf /container/run/available/21-argus-config-reload
     fi
     if [ "${SETUP_TYPE,,}" = "auto" ] || [ ! -f "${CONFIG_PATH}"/"${CONFIG_FILE}" ] ; then
         print_notice "[configure_argus] Configuring Argus settings"
@@ -59,7 +53,7 @@ configure_argus() {
         fi
 
         if ! grep -q "^service:" "${CONFIG_PATH}"/"${CONFIG_FILE}" ; then
-            cat /assets/argus/config.yml.example | silent sudo -u argus tee -a "${CONFIG_PATH}"/"${CONFIG_FILE}"
+            cat /container/data/argus/config.yml.example | silent sudo -u argus tee -a "${CONFIG_PATH}"/"${CONFIG_FILE}"
         fi
     else
         print_notice "[configure_argus] Manual settings mode detected - Skipping configuring Argus settings"

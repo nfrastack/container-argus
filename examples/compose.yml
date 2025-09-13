@@ -1,13 +1,12 @@
 services:
   argus-app:
-    image: tiredofit/argus:latest
+    image: docker.io/nfrastack/argus:latest
     container_name: argus-app
     labels:
+    labels:
       - traefik.enable=true
-      - traefik.http.routers.argus.rule=Host(`argus.example.com`)
-      - traefik.http.services.argus.loadbalancer.server.port=80
-      - traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https,wss
-      - traefik.http.routers.argus.middlewares=sslheader@docker
+      - traefik.http.routers.argus-app.rule=Host(`argus.example.com`)
+      - traefik.http.services.argus-app.loadbalancer.server.port=80
     volumes:
       - ./config:/config
       - ./data:/data
@@ -15,7 +14,6 @@ services:
       - ./logs/nginx:/www/nginx/
     environment:
       - TIMEZONE=America/Vancouver
-      - CONTAINER_NAME=argus-app
 
       - SETUP_TYPE=AUTO
     networks:

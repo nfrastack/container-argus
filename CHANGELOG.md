@@ -1,3 +1,8 @@
+## 1.6.0pre 2025-09-13 <code at nfrastack dot com>
+
+   ### Changed
+      - Switch to nfrastack/nginx base image
+
 ## 1.5.99 2025-09-12 <dave at tiredofit dot ca>
 
 Add image deprecation and EOL notice
