@@ -29,6 +29,7 @@ ARG \
 ENV \
     NGINX_SITE_ENABLED="argus" \
     NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
+    NGINX_WORKER_PROCESSES=1 \
     IMAGE_NAME="nfrastack/argus" \
     IMAGE_REPO_URL="https://github.com/nfrastack/container-argus/"
 
