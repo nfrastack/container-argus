@@ -16,7 +16,7 @@ liftoff
 case "${LOG_TYPE,,}" in
     both )
         out=/dev/stdout
-        pipe="tee -a ${LOG_PATH}/${LOG_FILE}"
+        pipe="sudo -u argus tee -a ${LOG_PATH}/${LOG_FILE}"
     ;;
     console )
         out=/dev/stdout
@@ -25,6 +25,21 @@ case "${LOG_TYPE,,}" in
     file )
         out="${LOG_PATH}/${LOG_FILE}"
         pipe="silent tee /dev/null"
+    ;;
+esac
+
+case "${LOG_TYPE,,}" in
+    both )
+        out=/dev/stdout
+        pipe=" sudo -u uptimekuma tee -a ${LOG_PATH}"/"${LOG_FILE}"
+    ;;
+    console )
+        out=/dev/stdout
+        pipe=" tee"
+    ;;
+    file )
+        out="${LOG_PATH}"/"${LOG_FILE}"
+        pipe=" :"
     ;;
 esac
 
