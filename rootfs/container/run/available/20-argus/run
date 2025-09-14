@@ -1,4 +1,4 @@
-#!/command/with-contenv bash
+	#!/command/with-contenv bash
 # SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
 #
 # SPDX-License-Identifier: MIT
@@ -13,24 +13,22 @@ check_container_initialized
 check_service_initialized init
 
 liftoff
-
 case "${LOG_TYPE,,}" in
     both )
         out=/dev/stdout
-        pipe=" sudo -u argus tee -a ${LOG_PATH}"/"${LOG_FILE}"
+        pipe="tee -a ${LOG_PATH}/${LOG_FILE}"
     ;;
     console )
         out=/dev/stdout
-        pipe=" tee"
+        pipe="cat"
     ;;
     file )
-        out="${LOG_PATH}"/"${LOG_FILE}"
-        pipe=" :"
+        out="${LOG_PATH}/${LOG_FILE}"
+        pipe="silent tee /dev/null"
     ;;
 esac
 
-tranform_var file ARGUS_ARGS
+transform_var file ARGUS_ARGS
 print_start "Starting Argus ${ARGUS_VERSION}"
 s6-setuidgid argus \
-                    exec argus \
-                                --config.file "${CONFIG_PATH}"/"${CONFIG_FILE}" ${ARGUS_ARGS} 2>&1 >> ${out} | ${pipe}
+                    exec argus --config.file "${CONFIG_PATH}/${CONFIG_FILE}" ${ARGUS_ARGS} >> "${out}" 2>&1 | ${pipe}
