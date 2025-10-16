@@ -35,6 +35,7 @@ COPY build-assets /build-assets
 
 RUN echo "" && \
     ARGUS_BUILD_DEPS_ALPINE=" \
+                                    binutils \
                                     git \
                                     make \
                                     nodejs \
