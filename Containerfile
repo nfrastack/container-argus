@@ -3,10 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 ARG BASE_IMAGE
-ARG DISTRO
-ARG DISTRO_VARIANT
 
-FROM ${BASE_IMAGE}:${DISTRO}_${DISTRO_VARIANT}
+FROM ${BASE_IMAGE}
 
 LABEL \
         org.opencontainers.image.title="Release Argus" \
@@ -38,7 +36,6 @@ COPY build-assets /build-assets
 RUN echo "" && \
     ARGUS_BUILD_DEPS_ALPINE=" \
                                     git \
-                                    go \
                                     make \
                                     nodejs \
                                     npm \
@@ -46,7 +43,6 @@ RUN echo "" && \
                                 " \
                                 && \
     ARGUS_RUN_DEPS_ALPINE=" \
-                                    yq-go \
                                 " \
                                 && \
     source /container/base/functions/container/build && \
@@ -58,6 +54,8 @@ RUN echo "" && \
                     ARGUS_BUILD_DEPS \
                     ARGUS_RUN_DEPS \
                     && \
+    package build go && \
+    package build yq && \
     \
     clone_git_repo "${ARGUS_REPO_URL}" "${ARGUS_VERSION}" && \
     if [ -d "/build-assets/src" ] && [ -n "$(ls -A "/build-assets/src" 2>/dev/null)" ]; then cp -R /build-assets/src/* ${GIT_REPO_SRC_ARGUS} ; fi; \
