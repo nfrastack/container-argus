@@ -15,7 +15,7 @@ if var_true "${RESTART_ON_CONFIG_CHANGE}" ; then
     CONTAINER_PROCESS_RUNAWAY_LIMIT=32767
 fi
 
-while inotifywait -q -e modify "${CONFIG_PATH}"/"${CONFIG_FILE}" >/dev/null 2>&1 ; do
+while inotifywait -q -e modify "${CONFIG_PATH%/}"/"${CONFIG_FILE}" >/dev/null 2>&1 ; do
   print_info "Restarting Argus due to a detected configuration file change"
   pkill argus
   exit 0

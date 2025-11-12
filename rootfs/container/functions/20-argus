@@ -14,7 +14,7 @@ argus_bootstrap_filesystem() {
                             "${LOG_PATH}" \
                             argus:argus 755
         fi
-        create_logrotate argus "${LOG_PATH}"/"${LOG_FILE}" argus argus argus
+        create_logrotate argus "${LOG_PATH%/}"/"${LOG_FILE}" argus argus argus
     fi
 }
 
@@ -27,7 +27,7 @@ argus_configure_application() {
     if var_false "${RESTART_ON_CONFIG_CHANGE}" ; then
         rm -rf /container/run/available/21-argus-config-reload
     fi
-    if [ "${SETUP_TYPE,,}" = "auto" ] || [ ! -f "${CONFIG_PATH}"/"${CONFIG_FILE}" ] ; then
+    if [ "${SETUP_TYPE,,}" = "auto" ] || [ ! -f "${CONFIG_PATH%/}"/"${CONFIG_FILE}" ] ; then
         print_notice "[configure_argus] Configuring Argus settings"
         s6-setuidgid argus yq -i    '
                                         .settings.log.level = env(LOG_LEVEL) |
@@ -38,22 +38,22 @@ argus_configure_application() {
                                         .settings.web.route_prefix = env(LISTEN_PREFIX) |
                                         .settings.basic_auth.username = env(ADMIN_USER) |
                                         .settings.basic_auth.password = env(ADMIN_PASS)
-                                    ' "${CONFIG_PATH}"/"${CONFIG_FILE}"
+                                    ' "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
 
         if [ -n "${DEFAULT_SERVICE_CHECK_INTERVAL}" ] ; then
             s6-setuidgid argus yq -i    '
                                             .defaults.service.options.interval = env(DEFAULT_SERVICE_CHECK_INTERVAL)
-                                        ' "${CONFIG_PATH}"/"${CONFIG_FILE}"
+                                        ' "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
         fi
 
         if [ -n "${DEFAULT_SERVICE_LATEST_VERSION_ACCESS_TOKEN}" ] ; then
             s6-setuidgid argus yq -i    '
                                             .defaults.service.latest_version.access_token = env(DEFAULT_SERVICE_LATEST_VERSION_ACCESS_TOKEN)
-                                        ' "${CONFIG_PATH}"/"${CONFIG_FILE}"
+                                        ' "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
         fi
 
-        if ! grep -q "^service:" "${CONFIG_PATH}"/"${CONFIG_FILE}" ; then
-            cat /container/data/argus/config.yml.example | silent sudo -u argus tee -a "${CONFIG_PATH}"/"${CONFIG_FILE}"
+        if ! grep -q "^service:" "${CONFIG_PATH%/}"/"${CONFIG_FILE}" ; then
+            cat /container/data/argus/config.yml.example | silent sudo -u argus tee -a "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
         fi
     else
         print_notice "[configure_argus] Manual settings mode detected - Skipping configuring Argus settings"
