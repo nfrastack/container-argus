@@ -59,7 +59,7 @@ RUN echo "" && \
     package build yq && \
     \
     clone_git_repo "${ARGUS_REPO_URL}" "${ARGUS_VERSION}" && \
-    build_assets src "${GIT_REPO_SRC_ARGUS}" \
+    build_assets src "${GIT_REPO_SRC_ARGUS}" && \
     build_assets scripts && \
     make build && \
     strip argus && \
