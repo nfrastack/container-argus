@@ -21,7 +21,7 @@ COPY LICENSE /usr/src/container/LICENSE
 COPY README.md /usr/src/container/README.md
 
 ARG \
-    ARGUS_VERSION="0.26.3" \
+    ARGUS_VERSION="0.27.0" \
     ARGUS_REPO_URL="https://github.com/release-argus/Argus"
 
 ENV \
@@ -59,8 +59,8 @@ RUN echo "" && \
     package build yq && \
     \
     clone_git_repo "${ARGUS_REPO_URL}" "${ARGUS_VERSION}" && \
-    if [ -d "/build-assets/src" ] && [ -n "$(ls -A "/build-assets/src" 2>/dev/null)" ]; then cp -R /build-assets/src/* ${GIT_REPO_SRC_ARGUS} ; fi; \
-    if [ -d "/build-assets/scripts" ] && [ -n "$(ls -A "/build-assets/scripts" 2>/dev/null)" ]; then for script in /build-assets/scripts/*.sh; do echo "** Applying $script"; bash $script; done && \ ; fi ; \
+    build_assets src "${GIT_REPO_SRC_ARGUS}" \
+    build_assets scripts && \
     make build && \
     strip argus && \
     cp -R argus /usr/local/sbin && \
@@ -71,7 +71,7 @@ RUN echo "" && \
     package remove \
                     ARGUS_BUILD_DEPS \
                     && \
-    rm -rf /build-assets && \
+    build_assets clean && \
     package cleanup
 
 EXPOSE 10000
