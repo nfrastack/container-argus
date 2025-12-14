@@ -2,7 +2,7 @@
 
    ### Changed
       - Switch to nfrastack/nginx base image
-      - Release Argus 0.28.0
+      - Release Argus 0.28.1
 
 ## 1.5.99 2025-09-12 <dave at tiredofit dot ca>
 
