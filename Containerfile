@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+# SPDX-FileCopyrightText: © 2026 Nfrastack <code@nfrastack.com>
 #
 # SPDX-License-Identifier: MIT
 
@@ -21,13 +21,12 @@ COPY LICENSE /usr/src/container/LICENSE
 COPY README.md /usr/src/container/README.md
 
 ARG \
-    ARGUS_VERSION="0.28.2" \
+    ARGUS_VERSION="0.29.3" \
     ARGUS_REPO_URL="https://github.com/release-argus/Argus"
 
 ENV \
+    ENABLE_NGINX=FALSE \
     NGINX_SITE_ENABLED="argus" \
-    NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
-    NGINX_WORKER_PROCESSES=1 \
     IMAGE_NAME="nfrastack/argus" \
     IMAGE_REPO_URL="https://github.com/nfrastack/container-argus/"
 
@@ -55,7 +54,7 @@ RUN echo "" && \
                     ARGUS_BUILD_DEPS \
                     ARGUS_RUN_DEPS \
                     && \
-    package build go && \
+    package build go buildtime && \
     package build yq && \
     \
     clone_git_repo "${ARGUS_REPO_URL}" "${ARGUS_VERSION}" && \
@@ -74,8 +73,4 @@ RUN echo "" && \
     build_assets clean && \
     package cleanup
 
-EXPOSE 10000
-
 COPY rootfs /
-
-
