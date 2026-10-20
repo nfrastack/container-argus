@@ -33,7 +33,9 @@ argus_configure_application() {
     fi
 
     if var_true "${ENABLE_NGINX}" ; then
-        update_template /container/data/nginx/site.enabled/argus/location/02-root_proxy.conf LISTEN_PORT
+        update_template "${NGINX_CONFIG_PATH%/}/sites.available/argus.conf" \
+                                                        NGINX_WEBROOT \
+                                                        LISTEN_PORT
     fi
 
     if [ "${SETUP_TYPE,,}" = "auto" ] || [ ! -f "${CONFIG_PATH%/}"/"${CONFIG_FILE}" ] ; then
