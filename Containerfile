@@ -21,7 +21,7 @@ COPY LICENSE /usr/src/container/LICENSE
 COPY README.md /usr/src/container/README.md
 
 ARG \
-    ARGUS_VERSION="0.29.3" \
+    ARGUS_VERSION="0.39.0" \
     ARGUS_REPO_URL="https://github.com/release-argus/Argus"
 
 ENV \

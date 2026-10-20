@@ -19,6 +19,11 @@ argus_bootstrap_filesystem() {
 }
 
 argus_configure_application() {
+    if [ ! -f "${CONFIG_PATH%/}"/"${CONFIG_FILE}" ] ; then
+        print_notice "[configure_argus] Creating missing config file"
+        s6-setuidgid argus touch "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
+    fi
+
     transform_var file \
                             ADMIN_PASS \
                             ADMIN_USER \
@@ -40,8 +45,8 @@ argus_configure_application() {
                                         .settings.web.listen_host = env(LISTEN_IP) |
                                         .settings.web.listen_port = env(LISTEN_PORT) |
                                         .settings.web.route_prefix = env(LISTEN_PREFIX) |
-                                        .settings.basic_auth.username = env(ADMIN_USER) |
-                                        .settings.basic_auth.password = env(ADMIN_PASS)
+                                        .settings.web.basic_auth.username = env(ADMIN_USER) |
+                                        .settings.web.basic_auth.password = env(ADMIN_PASS)
                                     ' "${CONFIG_PATH%/}"/"${CONFIG_FILE}"
 
         if [ -n "${DEFAULT_SERVICE_CHECK_INTERVAL}" ] ; then

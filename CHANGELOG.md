@@ -1,8 +1,9 @@
-## 1.6.0pre 2025-09-13 <code at nfrastack dot com>
+## 1.6.0 2026-10-19 <code at nfrastack dot com>
 
-   ### Changed
-      - Switch to nfrastack/nginx base image
-      - Release Argus 0.28.2
+   ### Added
+      - Release Argus 0.39.0
+      - Use nfrastack/nginx base images
+
 
 ## 1.5.99 2025-09-12 <dave at tiredofit dot ca>
 
